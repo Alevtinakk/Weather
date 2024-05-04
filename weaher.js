@@ -1,30 +1,8 @@
-require("dotenv").config();
-const { Telegraf } = require("telegraf");
-const { message } = require("telegraf/filters");
-const axios = require("axios");
-const helpHeadler = require("./headler/helpHeadler");
-const botComands = require("./botComands");
-const { getMainKeyboard, getSettingsKeyboard } = require("./utils");
-const developnemtheadler = require("./developmentHeadler");
-const rdm = require("./imgRandom");
-
-const bot = new Telegraf(process.env.TG_API_KEY);
-bot.start((ctx) => ctx.reply("Welcome"));
-bot.command("help", helpHeadler);
-
-bot.telegram.setMyCommands(botComands);
-bot.action("age", developnemtheadler);
-bot.action("foto", rdm);
-
-bot.on("message", async (ctx) => {
-  const mainKeyboard = getMainKeyboard();
-  const inlineKeyboard = getSettingsKeyboard();
-  ctx.reply("Выберите действие", inlineKeyboard);
-
+function weaher(ctx) {
   if (ctx.message.location) {
     console.log(ctx.message.location);
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${ctx.message.location.latitude}&lon=${ctx.message.location.longitude}&units=metric&lang=ru&appid=${process.env.WEATHER_API_KEY}`;
-    const response = await axios.get(url);
+    const response = axios.get(url); //await
     console.log(response);
     ctx.reply(`${response.data.main.temp}, ${response.data.name}`);
     const img_sun =
@@ -41,8 +19,5 @@ bot.on("message", async (ctx) => {
       ctx.sendPhoto(img_snow);
     }
   }
-});
-bot.launch();
-// Enable graceful stop
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+}
+module.exports = weaher;

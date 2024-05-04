@@ -13,6 +13,7 @@ function getSettingsKeyboard() {
   return Markup.inlineKeyboard([
     [Markup.button.callback("👨Пол👩", "gender")],
     [Markup.button.callback("📅Возраст", "age")],
+    [Markup.button.callback("🎴Фото", "foto")],
   ]);
 }
 
