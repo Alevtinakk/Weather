@@ -4,22 +4,44 @@ const { message } = require("telegraf/filters");
 const axios = require("axios");
 const helpHeadler = require("./headler/helpHeadler");
 const botComands = require("./botComands");
-const { getMainKeyboard, getSettingsKeyboard } = require("./utils");
+const {
+  getMainKeyboard,
+  getSettingsKeyboard,
+  VIPpayKeyboard,
+} = require("./utils");
 const developnemtheadler = require("./developmentHeadler");
-const rdm = require("./imgRandom");
+const imgRandom = require("./imgRandom");
+const User = require("./models/users");
+const mongoose = require("mongoose");
+const db =
+  "mongodb+srv://kovalyovaalevtina:hNUMNUXcdVaa1fIq@cluster0.ks8dgqa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+//hNUMNUXcdVaa1fIq
+const startHeadler = require("./headler/startHeadler");
+const payVip = require("./VIPpay");
+
+mongoose
+  .connect(db)
+  .then(() => console.log("подключено к бд"))
+  .catch((error) => console.log(error));
 
 const bot = new Telegraf(process.env.TG_API_KEY);
-bot.start((ctx) => ctx.reply("Welcome"));
+bot.start(startHeadler);
 bot.command("help", helpHeadler);
+// bot.command("vip", VIPpayKeyboard);
+bot.command("settings", developnemtheadler);
+bot.command("vip", (ctx) => {
+  return ctx.reply("Оплатить подписку?", VIPpayKeyboard());
+});
 
 bot.telegram.setMyCommands(botComands);
 bot.action("age", developnemtheadler);
-bot.action("foto", rdm);
+bot.action("foto", imgRandom);
+bot.action("payVip", payVip);
 
 bot.on("message", async (ctx) => {
-  const mainKeyboard = getMainKeyboard();
-  const inlineKeyboard = getSettingsKeyboard();
-  ctx.reply("Выберите действие", inlineKeyboard);
+  // const mainKeyboard = getMainKeyboard();
+  // const inlineKeyboard = getSettingsKeyboard();
+  // ctx.reply("Выберите действие", inlineKeyboard);
 
   if (ctx.message.location) {
     console.log(ctx.message.location);

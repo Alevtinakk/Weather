@@ -17,4 +17,10 @@ function getSettingsKeyboard() {
   ]);
 }
 
-module.exports = { getMainKeyboard, getSettingsKeyboard };
+function VIPpayKeyboard() {
+  return Markup.inlineKeyboard([
+    [Markup.button.callback("💲Оплатить💲", "payVip")],
+  ]);
+}
+
+module.exports = { getMainKeyboard, getSettingsKeyboard, VIPpayKeyboard };

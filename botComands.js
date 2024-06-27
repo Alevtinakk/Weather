@@ -11,6 +11,7 @@ const botComands = [
     command: "/settings",
     description: "Настройки бота",
   },
+  
 ];
 
 module.exports = botComands;
